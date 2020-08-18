@@ -2,10 +2,10 @@ package main
 
 import (
 	"gin/api/wall"
-	"gin/login"
 	"gin/middleware"
 	"gin/register"
 	"gin/views/home"
+	"gin/views/login"
 	"github.com/gin-gonic/gin"
 )
 
