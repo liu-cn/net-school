@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"gin/db"
+	"gin/api/wall"
 	"gin/login"
 	"gin/middleware"
 	"gin/register"
+	"gin/views/home"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func main() {
@@ -15,31 +14,16 @@ func main() {
 
 	route := gin.Default()
 	route.Use(middleware.Cors())
+	route.GET("/", middleware.JWTAuth,home.Home())
+
+
+
 	route.POST("/login", login.Login())
-	route.GET("/", middleware.JWTAuth,func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "hello world",
-		})
-
-	})
-
-	route.POST("/api/list520",middleware.JWTAuth, func(c *gin.Context) {
-		user,err:=db.Get520List()
-		if err != nil {
-			c.JSON(http.StatusOK,gin.H{
-				"msg":"获取数据失败！",
-				"list520":"",
-			})
-			fmt.Println(err,user)
-			return
-		}
-		c.JSON(http.StatusOK,gin.H{
-			"msg":"获取数据成功！",
-			"list520":*user,
-		})
-
-	})
 	route.POST("/register", register.Register())
+
+	route.POST("/api/wall",middleware.JWTAuth, wall.GetContentWallList())
+
+	route.POST("/api/commitwall",wall.CommitWallContent())
 
 	route.Run() // listen and serve on 0.0.0.0:8080
 }

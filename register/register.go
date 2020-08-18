@@ -49,6 +49,7 @@ func Register()func(*gin.Context){
 			c.JSON(http.StatusOK,gin.H{
 				"registerStatus":"ok",
 				"token":token,
+				"username":user.Username,
 			})
 		}
 
