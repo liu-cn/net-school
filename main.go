@@ -3,9 +3,9 @@ package main
 import (
 	"gin/api/wall"
 	"gin/middleware"
-	"gin/register"
 	"gin/views/home"
 	"gin/views/login"
+	"gin/views/register"
 	"github.com/gin-gonic/gin"
 )
 
