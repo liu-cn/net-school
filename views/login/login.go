@@ -56,7 +56,6 @@ func Login()func(c *gin.Context){
 			}
 			c.JSON(http.StatusOK,gin.H{
 				"username":login.Username,
-				"password":login.Password,
 				"token":token,
 				"msg": msg,
 			})

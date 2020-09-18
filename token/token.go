@@ -29,7 +29,6 @@ func GenerateToken(username,password string)(string,error){
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer: "mrliu",
-
 		},
 	}
 	tokenClaims:=jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
