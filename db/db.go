@@ -6,6 +6,7 @@ import (
 )
 
 var Db *sqlx.DB
+var FlutterDb *sqlx.DB
 
 //type User struct {
 //	Id int64 `db:"id"`
@@ -15,10 +16,15 @@ var Db *sqlx.DB
 
 func init() {
 	var err error
-	Db,err=sqlx.Open("mysql","test:123456@tcp(127.0.0.1:3306)/user")
+	Db, err = sqlx.Open("mysql", "test:123456@tcp(127.0.0.1:3306)/user")
 	if err != nil {
 		panic(err)
 	}
+	FlutterDb, err = sqlx.Open("mysql", "root:liubaorui3317@tcp(106.53.69.86:3306)/work")
+	if err != nil {
+		panic(err)
+	}
+
 	//var  user  []User
 	//err=Db.Select(&user,"select id,username,content from list where id>?",0)
 	//if err != nil {
@@ -35,4 +41,3 @@ func init() {
 //	}
 //	return &user, nil
 //}
-

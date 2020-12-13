@@ -18,34 +18,33 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-
 //生成token
-func GenerateToken(username,password string)(string,error){
-	nowtime:=time.Now()
-	expireTime:= nowtime.Add(3 *time.Hour)
-	claims:=Claims{
+func GenerateToken(username, password string) (string, error) {
+	nowtime := time.Now()
+	expireTime := nowtime.Add(48000 * time.Hour) //有效期
+	claims := Claims{
 		username,
 		password,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer: "mrliu",
+			Issuer:    "mrliu",
 		},
 	}
-	tokenClaims:=jwt.NewWithClaims(jwt.SigningMethodHS256,claims)
-	token,err:=tokenClaims.SignedString([]byte(jwtSecret))
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString([]byte(jwtSecret))
 
-	return token,err
+	return token, err
 
 }
 
 //解析token
-func ParseToken(token string)(*Claims,error){
-	tokenClaims,err:=jwt.ParseWithClaims(token,&Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(jwtSecret),nil
+func ParseToken(token string) (*Claims, error) {
+	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(jwtSecret), nil
 	})
-	if tokenClaims!=nil {
-		if claims,ok:=tokenClaims.Claims.(*Claims);ok&&tokenClaims.Valid{
-			return claims,err
+	if tokenClaims != nil {
+		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
+			return claims, err
 		}
 	}
 	return nil, err
