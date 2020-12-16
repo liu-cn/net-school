@@ -25,10 +25,10 @@ func RegisterUser(user *User) (bool, string) {
 	var hasUser HasUser
 
 	queryStr := `select username,phone from users where username=? or phone=?`
-	if err := db.FlutterDb.Get(&hasUser, queryStr, user.Username, user.Phone); err != nil {
+	if err := db.LocalDb.Get(&hasUser, queryStr, user.Username, user.Phone); err != nil {
 		fmt.Println("Select err:", err, hasUser)
 		sqlstr := `insert into users(username,password,phone)values(?,?,?)`
-		res := db.FlutterDb.MustExec(sqlstr, user.Username, user.Password, user.Phone)
+		res := db.LocalDb.MustExec(sqlstr, user.Username, user.Password, user.Phone)
 		fmt.Println(res)
 
 		return true, "注册成功"

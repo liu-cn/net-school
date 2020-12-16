@@ -20,8 +20,7 @@ func main() {
 	route.Use(middleware.Cors())
 	//route.GET("/", middleware.JWTAuth,home.Home())
 	route.GET("/", home.Home())
-	route.POST("/login", login.Login())
-	route.POST("/register", register.Register())
+
 	//route.POST("/api/wall",middleware.JWTAuth, wall.GetContentWallList())
 	route.POST("/api/wall", wall.GetContentWallList())
 	route.POST("/api/commitwall", wall.CommitWallContent())
@@ -31,7 +30,9 @@ func main() {
 	route.POST("/getqiniutoken", qiniu.GetQiniuToken)
 	route.GET("/download", download.Download)
 
-	//flutter api
+	//aiyingyuan api
 	route.GET("/profile", pages.GetProfileData)
+	route.POST("/login", login.Login())
+	route.POST("/register", register.Register())
 	route.Run() // listen and serve on 0.0.0.0:8080
 }

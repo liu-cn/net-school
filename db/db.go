@@ -7,6 +7,7 @@ import (
 
 var Db *sqlx.DB
 var FlutterDb *sqlx.DB
+var LocalDb *sqlx.DB
 
 //type User struct {
 //	Id int64 `db:"id"`
@@ -21,6 +22,10 @@ func init() {
 		panic(err)
 	}
 	FlutterDb, err = sqlx.Open("mysql", "root:liubaorui3317@tcp(106.53.69.86:3306)/work")
+	if err != nil {
+		panic(err)
+	}
+	LocalDb, err = sqlx.Open("mysql", "root:liu123456@tcp(127.0.0.1:3306)/work")
 	if err != nil {
 		panic(err)
 	}
