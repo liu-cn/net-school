@@ -1,6 +1,7 @@
 package main
 
 import (
+	"gin/api"
 	"gin/api/wall"
 	"gin/download"
 	"gin/flutter/pages"
@@ -34,5 +35,10 @@ func main() {
 	route.GET("/profile", pages.GetProfileData)
 	route.POST("/login", login.Login())
 	route.POST("/register", register.Register())
+	route.GET("/getblog", api.GetBlog)
+	//test.TestMongo()
+	//test.TestPostMongdbData()
+	//register.GetUid()
 	route.Run() // listen and serve on 0.0.0.0:8080
+
 }

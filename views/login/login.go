@@ -5,32 +5,44 @@ import (
 	"gin/db"
 	"gin/token"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/mgo.v2/bson"
 	"net/http"
 )
 
 //结构体这里字段名必须大写，不然接收不到数据。
 type UserLogin struct {
-	Uid       int64  `json:"uid"`
-	Phone     string `json:"phone" binding:"required"`
-	Password  string `json:"password" binding:"required"`
-	Age       int8   `json:"age"`
-	Gender    int8   `json:"gender"`
-	Introduce string `json:"introduce"`
-	Username  string `json:"username"`
-	Headimg   string `json:"headimg"`
-	Nickname  string `json:"nickname"`
+	Uid       int32  `bson:"uid" json:"uid"`
+	Phone     string `bson:"phone" json:"phone" binding:"required"`
+	Password  string `bson:"password" json:"password" binding:"required"`
+	Age       int32  `bson:"age" json:"age"`
+	Gender    int32  `bson:"gender" json:"gender"`
+	Introduce string `bson:"introduce" json:"introduce"`
+	Username  string `bson:"username" json:"username"`
+	Headimg   string `bson:"headimg" json:"headimg"`
+	Nickname  string `bson:"nickname" json:"nickname"`
 }
 
 //验证账号是否存在
+//func VerifyAccount(phone, password string) (bool, string, UserLogin) {
+//	var loginUser UserLogin
+//	sqlStr := `select phone,password,uid,age,gender,introduce,username,headimg,nickname from users where phone=? && password=?`
+//	if err := db.LocalDb.Get(&loginUser, sqlStr, phone, password); err != nil {
+//		fmt.Println("查询结果：err：", err)
+//		return false, "账号或密码错误！", loginUser
+//	} else {
+//		return true, "登录成功！", loginUser
+//	}
+//}
+//验证账号是否存在
 func VerifyAccount(phone, password string) (bool, string, UserLogin) {
 	var loginUser UserLogin
-	sqlStr := `select phone,password,uid,age,gender,introduce,username,headimg,nickname from users where phone=? && password=?`
-	if err := db.LocalDb.Get(&loginUser, sqlStr, phone, password); err != nil {
-		fmt.Println("查询结果：err：", err)
-		return false, "账号或密码错误！", loginUser
-	} else {
-		return true, "登录成功！", loginUser
+
+	err := db.Mongdb.C("user").Find(bson.M{"phone": phone, "password": password}).One(&loginUser)
+	if err != nil {
+		return false, "账号或密码错误", loginUser
 	}
+	fmt.Println(loginUser)
+	return true, "登录成功", loginUser
 }
 
 func Login() func(c *gin.Context) {
@@ -49,7 +61,7 @@ func Login() func(c *gin.Context) {
 		ok, msg, loginInfo := VerifyAccount(login.Phone, login.Password)
 		if !ok {
 			c.JSON(http.StatusOK, gin.H{
-				"status": "fail",
+				"status": "err",
 				"msg":    msg,
 			})
 			return
@@ -66,16 +78,6 @@ func Login() func(c *gin.Context) {
 				"status": "ok",
 				"data":   loginInfo,
 				"token":  token,
-				//"phone":     login.Phone,
-				//"msg":       msg,
-				//"uid":       loginInfo.Uid,
-				//"password":  loginInfo.Password,
-				//"age":       loginInfo.Age,
-				//"gender":    loginInfo.Gender,
-				//"introduce": loginInfo.Introduce,
-				//"username":  loginInfo.Username,
-				//"headimg":   loginInfo.Headimg,
-				//"nickname":  loginInfo.Nickname,
 			})
 		}
 	}
